@@ -1,0 +1,15 @@
+<div class="row search-main">
+    <div class="col-md-12">
+        <form action="#" class="form-inline" ng-sumbit="search($event)">
+            <div class="form-group">
+                <input type="text" class="form-control" name="search" ng-model="searchTerm" placeholder="Suchebegriff" />
+            </div>
+            <button type="submit" class="btn btn-primary" ng-click="search($event)" ng-disabled="searchTerm === ''">Suchen</button>
+        </form>
+    </div>
+</div>
+<div class="row search-results" ng-show="results.totalResults > 0">
+    <div class="col-md-12">
+        {{results.totalResults}}
+    </div>
+</div>
