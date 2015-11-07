@@ -1,3 +1,11 @@
+body,html{
+    background-color: #efefef;
+}
+
 .search-main{
     text-align: center;
+}
+
+.loader > div{
+    margin: 10px auto;
 }

@@ -8,8 +8,20 @@
         </form>
     </div>
 </div>
+<div ng-activity-indicator="DottedWhite" class="loader"></div>
 <div class="row search-results" ng-show="results.totalResults > 0">
     <div class="col-md-12">
-        {{results.totalResults}}
+        <ul>
+            <li ng-repeat="result in results.results">
+                {{result.title}}
+            </li>
+        </ul>
+        <nav class="pager" ng-show="pages > 1">
+            <ul class="pagination">
+                <li ng-hide="currentPage === 0"><a href="#" ng-click="prevPage($event)"><span>&laquo;</span></a></li>
+                <li ng-class="{active: $index === currentPage}" ng-repeat="page in range(pages) track by $index"><a href="#" ng-click="gotoPage($event, $index)"><span>{{$index + 1}}</span></a></li>
+                <li ng-hide="currentPage === (pages - 1)"><a href="#" ng-click="nextPage($event)"><span>&raquo;</span></a></li>
+            </ul>
+        </nav>
     </div>
 </div>
