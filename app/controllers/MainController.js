@@ -66,7 +66,6 @@ angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
         var buildPages = function(){
             var res = $scope.results;
 
-            var cIndex = Query.index;
             var total = res.totalResults;
 
             //TODO remove

@@ -1,11 +1,58 @@
-body,html{
-    background-color: #efefef;
+body,
+html {
+  background-color: #efefef;
+  font-family: 'Open Sans', sans-serif;
 }
-
-.search-main{
-    text-align: center;
+.search-main {
+  padding: 20px 0;
 }
-
-.loader > div{
-    margin: 10px auto;
+.search-main.start {
+  margin-top: 60px;
+  text-align: center;
+}
+.search-main.start form {
+  display: block;
+}
+.search-main.start svg {
+  margin-bottom: 15px;
+}
+.search-main form {
+  display: inline-block;
+  margin-left: 15px;
+  vertical-align: middle;
+}
+.search-main svg {
+  vertical-align: middle;
+  margin-bottom: 0;
+}
+.loader > div {
+  margin: 10px auto;
+}
+.search-results ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.search-results ul li {
+  padding: 0;
+  margin: 15px 0;
+}
+.search-results .result .journal {
+  font-size: 0.8em;
+}
+.search-results .result .title {
+  font-weight: bold;
+}
+.search-results .result .pmid:after {
+  content: ':';
+}
+.search-results .result .institutions,
+.search-results .result .authors {
+  font-size: 0.9em;
+}
+.search-results .result .abstract {
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

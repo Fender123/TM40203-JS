@@ -32,7 +32,11 @@ angular.module('App.service', ['ngResource'])
                 var query = [];
                 for(var f in fields){
                     if(fields.hasOwnProperty(f)){
-                        query.push(fields[f] + ':"' + this.term + '"');
+                        var searchValue = this.term;
+                        if(searchValue.indexOf(' ') !== -1){
+                            searchValue = '"' + searchValue + '"';
+                        }
+                        query.push(fields[f] + ':' + searchValue);
                     }
                 }
                 query = query.join(' ');
