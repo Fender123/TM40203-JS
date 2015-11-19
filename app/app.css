@@ -13,7 +13,7 @@ html {
 .search-main.start form {
   display: block;
 }
-.search-main.start svg {
+.search-main.start .logo {
   margin-bottom: 15px;
 }
 .search-main form {
@@ -21,9 +21,16 @@ html {
   margin-left: 15px;
   vertical-align: middle;
 }
-.search-main svg {
+.search-main .logo {
   vertical-align: middle;
   margin-bottom: 0;
+}
+.settings-btn-fixed {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: #555;
+  font-size: 1.1em;
 }
 .loader > div {
   margin: 10px auto;
@@ -55,4 +62,13 @@ html {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.navbar-settings {
+  margin: 15px 0;
+}
+.navbar-settings .navbar-brand {
+  padding: 0;
+}
+.navbar-settings .logo {
+  width: 120px;
 }

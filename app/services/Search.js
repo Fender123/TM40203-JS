@@ -2,15 +2,123 @@
 
 angular.module('App.service', ['ngResource'])
 
-    //http://stackoverflow.com/questions/12633904/angularjs-resource-different-url-for-get-and-post
-    .factory('Search', ['$resource', function($resource) {
-        return $resource('https://raw.githubusercontent.com/franqus/TM40203-iOS/master/MockData/20151107_pubmed_mock.json', {
+    .factory('SearchStatic', ['$http', '$q', function($http, $q) {
+        return {
+            search: function(args){
+                var deferred = $q.defer();
 
-        }, {
-            search: {
-                method: 'GET'
+                $http.get('https://raw.githubusercontent.com/franqus/TM40203-iOS/master/MockData/20151107_pubmed_mock.json').success(function(data){
+                    deferred.resolve(data);
+                });
+
+                return deferred.promise;
             }
-        });
+        };
+    }])
+
+    .factory('SearchCSharp', ['$http', '$q', function($http, $q) {
+        return {
+            search: function(args){
+                var deferred = $q.defer();
+
+                var query = {
+                    search: args.query,
+                    startIndex: args.index,
+                    length: args.length
+                };
+
+                $http.get('http://dhbw-master.cloudapp.net/lucene/Service1.svc/query', {params: query}).success(function(data){
+                    //prepare data
+
+                    var res = {
+                        results: [],
+                        totalResults: 0,
+                        resultsPerPage: 10,
+                        index: 0
+                    };
+
+                    if(data && typeof data.QueryResult !== 'undefined'){
+                        var qr = data.QueryResult;
+
+                        res.totalResults = qr.totalResults;
+                        res.resultsPerPage = qr.resultsPerPage;
+                        res.index = qr.index;
+
+                        res.results = qr.results;
+                    }
+
+                    deferred.resolve(res);
+                });
+
+                return deferred.promise;
+            }
+        };
+    }])
+
+    .factory('SearchJava', ['$http', '$q', function($http, $q) {
+        return {
+            search: function(args){
+                var deferred = $q.defer();
+
+                /*var query = {
+                    search: args.query,
+                    startIndex: args.index,
+                    length: args.length
+                };
+
+                $http.get('http://dhbw-master.cloudapp.net/lucene/Service1.svc/query', {params: query}).success(function(data){
+                    //prepare data
+
+                    var res = {
+                        results: [],
+                        totalResults: 0,
+                        resultsPerPage: 10,
+                        index: 0
+                    };
+
+                    if(data && typeof data.QueryResult !== 'undefined'){
+                        var qr = data.QueryResult;
+
+                        res.totalResults = qr.totalResults;
+                        res.resultsPerPage = qr.resultsPerPage;
+                        res.index = qr.index;
+
+                        res.results = qr.results;
+                    }
+
+                    deferred.resolve(res);
+                });*/
+
+                return deferred.promise;
+            }
+        };
+    }])
+
+    .service('SearchManager', ['SearchStatic', 'SearchCSharp', 'SearchJava', function(SearchStatic, SearchCSharp, SearchJava){
+        var getDataSource = function(dsName){
+            var ds = null;
+            switch(dsName){
+                case 'C#':
+                    ds = SearchCSharp;
+                    break;
+                case 'Java':
+                    ds = SearchJava;
+                    break;
+                case 'Static':
+                    ds = SearchStatic;
+                    break;
+                default:
+                    ds = SearchStatic;
+                    break;
+            }
+            return ds;
+        };
+        return {
+            search: function(dsKey, args){
+                var ds = getDataSource(dsKey);
+                return ds.search(args);
+            }
+        };
     }])
 
     .factory('Query', [function(){
@@ -22,7 +130,7 @@ angular.module('App.service', ['ngResource'])
             getQuery: function(){
                 return {
                     query: this.getQueryString(),
-                    lenght: this.length,
+                    length: this.length,
                     index: this.index
                 };
             },

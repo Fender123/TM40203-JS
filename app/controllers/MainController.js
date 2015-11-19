@@ -9,13 +9,11 @@ angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
         });
     }])
 
-    .controller('MainCtrl', ['$scope', 'Search', 'Query', '$activityIndicator', '$timeout', function($scope, Search, Query, $activityIndicator, $timeout) {
+    .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$activityIndicator', '$timeout', function($scope, $rootScope, SearchManager, Query, $activityIndicator, $timeout) {
         $scope.searchTerm = '';
         $scope.results = [];
         $scope.pages = 0;
         $scope.currentPage = 0;
-
-        var BoundSearch = Search;
 
         $scope.search = function($event){
             $event.preventDefault();
@@ -55,8 +53,9 @@ angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
         var updateSearch = function(){
             $activityIndicator.startAnimating();
 
-            BoundSearch = Search.bind(Query.getQuery());
-            $scope.results = BoundSearch.search({}, function(){
+            $scope.results = SearchManager.search($rootScope.global.datasourceKey, Query.getQuery()).then(function(results){
+                $scope.results = results;
+
                 buildPages();
 
                 $activityIndicator.stopAnimating();
@@ -67,9 +66,6 @@ angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
             var res = $scope.results;
 
             var total = res.totalResults;
-
-            //TODO remove
-            total = 28;
 
             var pages = Math.ceil(total / Query.length);
             var currentPage = Query.currentPage();
