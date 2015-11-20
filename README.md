@@ -1,12 +1,5 @@
-# tm40203-js
+# TM40203-JS
 
-This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
-version 0.14.0.
+Webfrontend made with Bootstrap and Angular JS for the KM backend developed for TM40203
 
-## Build & development
-
-Run `grunt` for building and `grunt serve` for preview.
-
-## Testing
-
-Running `grunt test` will run the unit tests with karma.
+(iOS app see [franqus/TM40203-iOS](github.com/franqus/TM40203-iOS))
