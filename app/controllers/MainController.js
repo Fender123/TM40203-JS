@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
+angular.module('App.main', ['ngRoute'])
 
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/', {
@@ -9,7 +9,7 @@ angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
         });
     }])
 
-    .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$activityIndicator', '$timeout', function($scope, $rootScope, SearchManager, Query, $activityIndicator, $timeout) {
+    .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$mdDialog', function($scope, $rootScope, SearchManager, Query, $mdDialog) {
         $scope.searchTerm = '';
         $scope.results = [];
         $scope.pages = 0;
@@ -50,15 +50,32 @@ angular.module('App.main', ['ngRoute', 'ngActivityIndicator'])
             return new Array(n);
         };
 
+        $scope.showSettings = function(){
+
+        };
+
+        $scope.resultsLazyLoader = {
+            getItemAtIndex: function(index){
+                console.log(index);
+                return null;
+            },
+            getLength: function(){
+                console.log($scope.results.length, $scope.totalResults);
+                return $scope.results.length === 0 ? 0 : $scope.totalResults;
+            }
+        };
+
         var updateSearch = function(){
-            $activityIndicator.startAnimating();
+            //$activityIndicator.startAnimating();
 
             $scope.results = SearchManager.search($rootScope.global.datasourceKey, Query.getQuery()).then(function(results){
                 $scope.results = results;
 
+                $scope.totalResults = results.totalResults;
+
                 buildPages();
 
-                $activityIndicator.stopAnimating();
+                //$activityIndicator.stopAnimating();
             });
         };
 

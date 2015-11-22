@@ -2,6 +2,8 @@
 
 angular.module('App', [
     'ngRoute',
+    'ngMaterial',
+    'ngMdIcons',
     'App.main',
     'App.settings',
     'App.service'

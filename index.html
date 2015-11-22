@@ -4,21 +4,26 @@
     <meta charset="UTF-8">
     <title>PubMed Search</title>
 
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="/bower_components/ngActivityIndicator/css/ngActivityIndicator.css" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="/bower_components/angular-material-icons/angular-material-icons.css" />
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="/app/app.css" />
 </head>
-<body>
-    <a href="#/settings" class="settings-btn-fixed"><i class="glyphicon glyphicon-cog"></i></a>
-    <div class="container" ng-view></div>
+<body layout="row">
+
+    <md-content layout-fill ng-view></md-content>
 
     <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-aria/angular-aria.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/angular-material/angular-material.js"></script>
     <script src="/bower_components/angular-route/angular-route.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.js"></script>
-    <script src="/bower_components/ngActivityIndicator/ngActivityIndicator.js"></script>
+    <script src="/bower_components/angular-material-icons/angular-material-icons.js"></script>
     <script src="/app/app.js"></script>
     <script src="/app/services/Search.js"></script>
     <script src="/app/controllers/MainController.js"></script>

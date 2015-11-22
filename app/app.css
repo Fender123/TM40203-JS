@@ -1,71 +1,8 @@
-body,
-html {
-  background-color: #efefef;
-  font-family: 'Open Sans', sans-serif;
+.logo {
+  float: left;
+  margin-right: 25px;
 }
-.search-main {
-  padding: 20px 0;
-}
-.search-main.start {
-  margin-top: 60px;
-  text-align: center;
-}
-.search-main.start form {
-  display: block;
-}
-.search-main.start .logo {
-  margin-bottom: 15px;
-}
-.search-main form {
-  display: inline-block;
-  margin-left: 15px;
-  vertical-align: middle;
-}
-.search-main .logo {
-  vertical-align: middle;
-  margin-bottom: 0;
-}
-.settings-btn-fixed {
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  color: #555;
-  font-size: 1.1em;
-}
-.loader > div {
-  margin: 10px auto;
-}
-.search-results ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.search-results ul li {
-  padding: 0;
-  margin: 15px 0;
-}
-.search-results .result .journal {
-  font-size: 0.8em;
-}
-.search-results .result .title {
-  font-weight: bold;
-}
-.search-results .result .institutions,
-.search-results .result .authors {
-  font-size: 0.9em;
-}
-.search-results .result .abstract {
-  font-size: 0.9em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.navbar-settings {
-  margin: 15px 0;
-}
-.navbar-settings .navbar-brand {
-  padding: 0;
-}
-.navbar-settings .logo {
-  width: 120px;
+md-card.results .title a {
+  color: inherit;
+  text-decoration: none;
 }
