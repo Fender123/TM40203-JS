@@ -15,7 +15,7 @@
         <ul>
             <li ng-repeat="result in results.results" class="result">
                 <div class="journal">{{result.journal}}</div>
-                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title"><span class="pmid">{{result.pmid}}</span> {{result.title}}</a>
+                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title"><span class="pmid">{{result.pmid}}:</span> {{result.title}}</a>
                 <div class="institutions">{{result.institutions}}</div>
                 <div class="authors">{{result.authors.join(', ')}}</div>
                 <div class="abstract">{{result.abstract}}</div>
@@ -29,4 +29,7 @@
             </ul>
         </nav>
     </div>
+</div>
+<div class="row no-results" ng-show="results.totalResults === 0">
+    <div class="col-md-10 col-md-offset-1">Für diesen Suchbegriff wurden leider keine Ergebnisse gefunden.</div>
 </div>

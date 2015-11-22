@@ -50,9 +50,6 @@ html {
 .search-results .result .title {
   font-weight: bold;
 }
-.search-results .result .pmid:after {
-  content: ':';
-}
 .search-results .result .institutions,
 .search-results .result .authors {
   font-size: 0.9em;
