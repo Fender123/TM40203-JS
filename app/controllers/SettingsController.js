@@ -4,7 +4,7 @@ angular.module('App.settings', ['ngRoute'])
 
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider.when('/settings', {
-            templateUrl: '/app/views/settings.html',
+            templateUrl: 'app/views/settings.html',
             controller: 'SettingsCtrl'
         });
     }])
