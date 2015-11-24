@@ -1,0 +1,24 @@
+<nav class="navbar navbar-settings">
+    <div class="navbar-header">
+        <a href="#/" class="navbar-brand">
+            <img src="/app/images/logo.svg" class="logo" alt="Logo">
+        </a>
+    </div>
+</nav>
+<div class="row settings">
+    <div class="col-md-8 col-md-offset-1">
+        <form action="#" class="form-horizontal">
+            <div class="form-group">
+                <label for="datasource" class="col-sm-2 control-label">Quelle</label>
+                <div class="col-sm-10">
+                    <select name="datasource" id="datasource" class="form-control" ng-model="global.datasourceKey">
+                        <option value="C#">C# API</option>
+                        <option value="Java">Java API</option>
+                        <option value="Static">Static Github file</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <a href="#/" class="btn btn-default">Zurück zur Suche</a>
+    </div>
+</div>
