@@ -9,11 +9,38 @@ angular.module('App.main', ['ngRoute'])
         });
     }])
 
-    .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$mdDialog', function($scope, $rootScope, SearchManager, Query, $mdDialog) {
+
+    .filter('makeRange', function(){
+        return function (input){
+            var lowBound, highBound;
+            switch (input.length){
+                case 1:
+                    lowBound = 0;
+                    highBound = parseInt(input[0], 10) - 1;
+                    break;
+                case 2:
+                    lowBound = parseInt(input[0], 10);
+                    highBound = parseInt(input[1], 10);
+                    break;
+                default:
+                    return input;
+            }
+            var result = [];
+            for(var i = lowBound; i <= highBound; i++){
+                result.push(i);
+            }
+            return result;
+        }
+    })
+
+    .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$mdDialog', '$mdMedia', function($scope, $rootScope, SearchManager, Query, $mdDialog, $mdMedia) {
+        $scope.$mdMedia = $mdMedia;
         $scope.searchTerm = '';
         $scope.results = [];
-        $scope.pages = 0;
+        $scope.pages = [0, 0];
         $scope.currentPage = 0;
+        $scope.timing = false;
+        $scope.loading = false;
 
         $scope.search = function($event){
             $event.preventDefault();
@@ -45,41 +72,59 @@ angular.module('App.main', ['ngRoute'])
             updateSearch();
         };
 
-        //Helper for paging loop
-        $scope.range = function(n) {
-            return new Array(n);
+        var resetSearch = function(){
+            $scope.results = [];
+            $scope.pages = [0, 0];
+            $scope.currentPage = 0;
         };
 
-        $scope.showSettings = function(){
+        $scope.showSettingsDialog = function($event){
+            $event.preventDefault();
 
-        };
-
-        $scope.resultsLazyLoader = {
-            getItemAtIndex: function(index){
-                console.log(index);
-                return null;
-            },
-            getLength: function(){
-                console.log($scope.results.length, $scope.totalResults);
-                return $scope.results.length === 0 ? 0 : $scope.totalResults;
-            }
+            var parentEl = angular.element(document.body);
+            $mdDialog.show({
+                //parent: parentEl,
+                targetEvent: $event,
+                templateUrl: 'app/views/settings.html',
+                clickOutsideToClose: true,
+                controller: function DialogController($scope, $rootScope, $mdDialog) {
+                    $scope.closeDialog = function(){
+                        $mdDialog.hide();
+                    };
+                    $scope.datasourceKey = $rootScope.global.datasourceKey;
+                    $scope.$watch('datasourceKey', function(){
+                        if($rootScope.global.datasourceKey !== $scope.datasourceKey) {
+                            resetSearch();
+                        }
+                        $rootScope.global.datasourceKey = $scope.datasourceKey;
+                    })
+                }
+            });
         };
 
         var updateSearch = function(){
             //$activityIndicator.startAnimating();
+            $scope.loading = true;
 
+            var start = (new Date()).getTime();
             $scope.results = SearchManager.search($rootScope.global.datasourceKey, Query.getQuery()).then(function(results){
                 $scope.results = results;
+
+                var end = (new Date()).getTime();
+                $scope.timing = (end - start) / 1000;
 
                 $scope.totalResults = results.totalResults;
 
                 buildPages();
 
                 //$activityIndicator.stopAnimating();
+                $scope.loading = false;
             });
         };
 
         var buildPages = function(){
+            var numPagesToShow = 10;
+
             var res = $scope.results;
 
             var total = res.totalResults;
@@ -87,7 +132,7 @@ angular.module('App.main', ['ngRoute'])
             var pages = Math.ceil(total / Query.length);
             var currentPage = Query.currentPage();
 
-            $scope.pages = pages;
+            $scope.pages = [Math.max(0, currentPage - (numPagesToShow / 2)), Math.min(pages - 1, currentPage + (numPagesToShow / 2))];
             $scope.currentPage = currentPage;
         };
     }]);

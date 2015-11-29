@@ -37,8 +37,8 @@ angular.module('App.service', ['ngResource'])
                         index: 0
                     };
 
-                    if(data && typeof data.QueryResult !== 'undefined'){
-                        var qr = data.QueryResult;
+                    if(data && typeof data.results !== 'undefined'){
+                        var qr = data;
 
                         res.totalResults = qr.totalResults;
                         res.resultsPerPage = qr.resultsPerPage;
@@ -60,13 +60,13 @@ angular.module('App.service', ['ngResource'])
             search: function(args){
                 var deferred = $q.defer();
 
-                /*var query = {
+                var query = {
                     search: args.query,
                     startIndex: args.index,
                     length: args.length
                 };
 
-                $http.get('http://dhbw-master.cloudapp.net/lucene/Service1.svc/query', {params: query}).success(function(data){
+                $http.get('http://185.44.105.219:8080/ADM-Java-Service/lucene/query', {params: query}).success(function(data){
                     //prepare data
 
                     var res = {
@@ -76,8 +76,8 @@ angular.module('App.service', ['ngResource'])
                         index: 0
                     };
 
-                    if(data && typeof data.QueryResult !== 'undefined'){
-                        var qr = data.QueryResult;
+                    if(data && typeof data.results !== 'undefined'){
+                        var qr = data;
 
                         res.totalResults = qr.totalResults;
                         res.resultsPerPage = qr.resultsPerPage;
@@ -87,7 +87,7 @@ angular.module('App.service', ['ngResource'])
                     }
 
                     deferred.resolve(res);
-                });*/
+                });
 
                 return deferred.promise;
             }
