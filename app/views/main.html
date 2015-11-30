@@ -1,42 +1,68 @@
-<a href="#/settings" class="md-fab md-fab-bottom-right md-button md-default-theme md-mini">
+<a href="#" ng-click="showSettingsDialog($event)" class="md-fab md-fab-bottom-right md-button md-default-theme md-mini">
     <ng-md-icon icon="settings"></ng-md-icon>
 </a>
 <md-content flex md-scroll-y layout-fill class="md-default-theme">
     <md-content layout="column" layout-padding>
         <md-card flex-gt-sm="90" flex-gt-md="80" class="md-default-theme search">
             <md-card-content>
-                <form action="#" ng-submit="search($event)" layout="row" layout-align="center center">
-                    <img class="logo" src="app/images/logo.svg" alt="Logo">
-                    <ui-view layout="row" layout-align="center center">
+                <form action="#" ng-submit="search($event)" layout="column" layout-align="center center">
+                    <ui-view layout="row" layout-sm="column" layout-align="center center">
+                        <img class="logo" src="app/images/logo.svg" alt="Logo">
                         <md-input-container>
-                            <label>Suchbegriff</label>
-                            <input type="text" ng-model="searchTerm" >
+                            <label>{{advancedMode ? 'Titel' : 'Suchbegriff'}}</label>
+                            <input type="text" ng-model="search.title" >
                         </md-input-container>
-                        <md-button class="md-raised md-primary" type="submit" ng-click="search($event)" ng-disabled="searchTerm === ''"><ng-md-icon icon="search"></ng-md-icon>Suchen</md-button>
+                        <md-button class="md-raised md-primary" ng-hide="loading" type="submit" ng-click="search($event)" ng-disabled="(search.title === '' && !advancedMode)"><ng-md-icon icon="search"></ng-md-icon>Suchen</md-button>
+                        <md-progress-circular ng-show="loading" md-mode="indeterminate" md-diameter="36" ng-class="{'gt-sm': $mdMedia('gt-sm')}"></md-progress-circular>
                     </ui-view>
+                    <md-checkbox ng-model="advancedMode">Erweiterter Modus</md-checkbox>
+                    <div layout="row" layout-sm="column" ng-show="advancedMode">
+                        <md-input-container>
+                            <label>Journal</label>
+                            <input type="text" ng-model="search.journal">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Autor</label>
+                            <input type="text" ng-model="search.authors">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Institution</label>
+                            <input type="text" ng-model="search.institutions">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Text</label>
+                            <input type="text" ng-model="search.abstract">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>PMID</label>
+                            <input type="text" ng-model="search.PMID">
+                        </md-input-container>
+                    </div>
                 </form>
             </md-card-content>
         </md-card>
 
         <md-card flex-gt-sm="90" flex-gt-md="80" class="md-default-theme results">
             <md-card-content ng-show="results.totalResults > 0">
-                <h2>Ergebnisse</h2>
+                <h2>{{results.totalResults}} Ergebnisse<span class="md-caption" ng-show="timing"> (in {{timing | number: 3}} Sekunden)</span></h2>
                 <md-list role="list">
-                    <md-list-item role="listitem" ng-repeat="result in results.results">
+                    <md-list-item role="listitem" ng-repeat="result in results.results track by $index">
                         <md-item-content class="md-primary-container">
                             <h3 class="title" layout="row"><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a></h3>
                             <h4 class="journal" title="Journal">{{result.journal}}</h4>
                             <p class="institutions" title="Institutionen">{{result.institutions}}</p>
                             <p class="authors" title="Autoren">{{result.authors.join(', ')}}</p>
-                            <p class="abstract" title="Abstract">{{result.abstract}}</p>
+                            <p class="abstract" title="Abstract">{{result.abstract | limitTo: (result.showAll ? result.abstract.length : 120) }}<span ng-hide="result.showAll">...</span> <a href="#" class="toggle-show-more-btn md-primary md-button md-ink-ripple" ng-click="toggleShowMore($event, result)"><span ng-hide="result.showAll">mehr &gt;</span><span ng-show="result.showAll">&lt; weniger</span></a></p>
                         </md-item-content>
                         <md-divider ng-if="!$last"></md-divider>
                     </md-list-item>
                 </md-list>
-                <div class="pager" ng-show="pages > 1" layout="row" layout-align="center center" layout-wrap>
+                <div class="pager" ng-show="pages[0] !== pages[1]" layout="row" layout-align="center center" layout-wrap>
                     <md-button class="md-button md-raised md-primary md-icon-button" href="#" ng-hide="currentPage === 0" ng-click="prevPage($event)"><ng-md-icon icon="fast_rewind"></ng-md-icon></md-button>
-                    <md-button class="md-button md-raised md-icon-button" href="#" ng-disabled="$index === currentPage" ng-repeat="page in range(pages) track by $index" ng-click="gotoPage($event, $index)"><span>{{$index + 1}}</span></md-button>
-                    <md-button class="md-button md-raised md-primary md-icon-button" ng-hide="currentPage === (pages - 1)" href="#" ng-click="nextPage($event)"><ng-md-icon icon="fast_forward"></ng-md-icon></md-button>
+                    <md-button class="md-button md-raised md-icon-button" href="#" ng-show="showFirstPage" ng-click="gotoPage($event, 0)">1</md-button>
+                    <md-button class="md-button md-raised md-icon-button" href="#" ng-disabled="page === currentPage" ng-repeat="page in pages | makeRange" ng-click="gotoPage($event, page)"><span>{{page + 1}}</span></md-button>
+                    <md-button class="md-button md-raised md-icon-button" href="#" ng-show="showLastPage" ng-click="gotoPage($event, pages[1])">{{pages[1] + 1}}</md-button>
+                    <md-button class="md-button md-raised md-primary md-icon-button" ng-hide="currentPage === pages[1]" href="#" ng-click="nextPage($event)"><ng-md-icon icon="fast_forward"></ng-md-icon></md-button>
                 </div>
             </md-card-content>
             <md-card-content ng-show="results.totalResults === 0">

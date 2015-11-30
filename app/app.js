@@ -5,7 +5,6 @@ angular.module('App', [
     'ngMaterial',
     'ngMdIcons',
     'App.main',
-    'App.settings',
     'App.service'
 ])
     .config(['$routeProvider', function($routeProvider) {
