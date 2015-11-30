@@ -9,6 +9,8 @@ angular.module('App.service', ['ngResource'])
 
                 $http.get('https://raw.githubusercontent.com/franqus/TM40203-iOS/master/MockData/20151107_pubmed_mock.json').success(function(data){
                     deferred.resolve(data);
+                }).error(function(){
+                    deferred.resolve(false);
                 });
 
                 return deferred.promise;
@@ -37,8 +39,8 @@ angular.module('App.service', ['ngResource'])
                         index: 0
                     };
 
-                    if(data && typeof data.QueryResult !== 'undefined'){
-                        var qr = data.QueryResult;
+                    if(data && typeof data.results !== 'undefined'){
+                        var qr = data;
 
                         res.totalResults = qr.totalResults;
                         res.resultsPerPage = qr.resultsPerPage;
@@ -48,6 +50,8 @@ angular.module('App.service', ['ngResource'])
                     }
 
                     deferred.resolve(res);
+                }).error(function(){
+                    deferred.resolve(false);
                 });
 
                 return deferred.promise;
@@ -60,13 +64,13 @@ angular.module('App.service', ['ngResource'])
             search: function(args){
                 var deferred = $q.defer();
 
-                /*var query = {
+                var query = {
                     search: args.query,
                     startIndex: args.index,
                     length: args.length
                 };
 
-                $http.get('http://dhbw-master.cloudapp.net/lucene/Service1.svc/query', {params: query}).success(function(data){
+                $http.get('http://185.44.105.219:8080/ADM-Java-Service/lucene/query', {params: query}).success(function(data){
                     //prepare data
 
                     var res = {
@@ -76,8 +80,8 @@ angular.module('App.service', ['ngResource'])
                         index: 0
                     };
 
-                    if(data && typeof data.QueryResult !== 'undefined'){
-                        var qr = data.QueryResult;
+                    if(data && typeof data.results !== 'undefined'){
+                        var qr = data;
 
                         res.totalResults = qr.totalResults;
                         res.resultsPerPage = qr.resultsPerPage;
@@ -87,7 +91,9 @@ angular.module('App.service', ['ngResource'])
                     }
 
                     deferred.resolve(res);
-                });*/
+                }).error(function(){
+                    deferred.resolve(false);
+                });
 
                 return deferred.promise;
             }
@@ -123,9 +129,14 @@ angular.module('App.service', ['ngResource'])
 
     .factory('Query', [function(){
         var Query = {
+            MODE_ADVANCED: 'advanced',
+            MODE_SIMPLE: 'simple',
+
             term: '',
             length: 10,
             index: 0,
+            search: {},
+            mode: this.MODE_SIMPLE,
 
             getQuery: function(){
                 return {
@@ -136,15 +147,27 @@ angular.module('App.service', ['ngResource'])
             },
 
             getQueryString: function(){
-                var fields = ['journal', 'authors', 'title', 'institutions', 'abstract', 'pmid'];
                 var query = [];
-                for(var f in fields){
-                    if(fields.hasOwnProperty(f)){
-                        var searchValue = this.term;
-                        if(searchValue.indexOf(' ') !== -1){
-                            searchValue = '"' + searchValue + '"';
+                var fields = ['journal', 'authors', 'title', 'institutions', 'abstract', 'pmid'];
+                if(this.mode === this.MODE_SIMPLE) {
+                    if(typeof this.term === 'undefined'){
+                        return '';
+                    }
+                    for (var f in fields) {
+                        if (fields.hasOwnProperty(f)) {
+                            var searchValue = this._prepareParam(this.term);
+                            query.push(fields[f] + ':' + searchValue);
                         }
-                        query.push(fields[f] + ':' + searchValue);
+                    }
+                }else if(this.mode === this.MODE_ADVANCED){
+                    for(var s in this.search){
+                        if(this.search.hasOwnProperty(s)){
+                            var fieldName = s.toLowerCase();
+                            //check if field is valid and contains anything
+                            if(fields.indexOf(fieldName) !== false && this.search[s] !== ''){
+                                query.push(fieldName + ':' + this.search[s]);
+                            }
+                        }
                     }
                 }
                 query = query.join(' ');
@@ -159,10 +182,22 @@ angular.module('App.service', ['ngResource'])
                 this.term = '';
                 this.index = 0;
                 this.length = 10;
+                this.search = {};
+                this.mode = this.MODE_SIMPLE;
             },
 
             currentPage: function(){
                 return Math.floor(this.index / Query.length);
+            },
+
+            _prepareParam: function(searchValue){
+                if(typeof searchValue === 'undefined'){
+                    searchValue = '';
+                }
+                if (searchValue && searchValue.indexOf(' ') !== -1) {
+                    searchValue = '"' + searchValue + '"';
+                }
+                return searchValue;
             }
         };
 
