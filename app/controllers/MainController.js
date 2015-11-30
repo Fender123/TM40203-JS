@@ -35,7 +35,7 @@ angular.module('App.main', ['ngRoute'])
 
     .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$mdDialog', '$mdMedia', function($scope, $rootScope, SearchManager, Query, $mdDialog, $mdMedia) {
         $scope.$mdMedia = $mdMedia;
-        $scope.search = {
+        $scope.searchTerms = {
             title: '',
             journal: '',
             authors: '',
@@ -56,10 +56,10 @@ angular.module('App.main', ['ngRoute'])
             Query.reset();
             if($scope.advancedMode) {
                 Query.mode = Query.MODE_ADVANCED;
-                Query.search = $scope.search;
+                Query.search = $scope.searchTerms;
             }else{
                 Query.mode = Query.MODE_SIMPLE;
-                Query.term = $scope.search.title;
+                Query.term = $scope.searchTerms.title;
             }
 
             updateSearch();

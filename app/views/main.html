@@ -1,4 +1,4 @@
-<a href="#" ng-click="showSettingsDialog($event)" class="md-fab md-fab-bottom-right md-button md-default-theme md-mini">
+<a href="#" ng-click="showSettingsDialog($event)" class="md-fab md-fab-bottom-right md-button md-default-theme md-primary md-mini">
     <ng-md-icon icon="settings"></ng-md-icon>
 </a>
 <md-content flex md-scroll-y layout-fill class="md-default-theme">
@@ -10,32 +10,32 @@
                         <img class="logo" src="app/images/logo.svg" alt="Logo">
                         <md-input-container>
                             <label>{{advancedMode ? 'Titel' : 'Suchbegriff'}}</label>
-                            <input type="text" ng-model="search.title" >
+                            <input type="text" ng-model="searchTerms.title">
                         </md-input-container>
-                        <md-button class="md-raised md-primary" ng-hide="loading" type="submit" ng-click="search($event)" ng-disabled="(search.title === '' && !advancedMode)"><ng-md-icon icon="search"></ng-md-icon>Suchen</md-button>
+                        <md-button class="md-raised md-primary" ng-hide="loading" type="submit" ng-click="search($event)" ng-disabled="searchTerms.title === '' && advancedMode === false"><ng-md-icon icon="search"></ng-md-icon>Suchen</md-button>
                         <md-progress-circular ng-show="loading" md-mode="indeterminate" md-diameter="36" ng-class="{'gt-sm': $mdMedia('gt-sm')}"></md-progress-circular>
                     </ui-view>
                     <md-checkbox ng-model="advancedMode">Erweiterter Modus</md-checkbox>
                     <div layout="row" layout-sm="column" ng-show="advancedMode">
                         <md-input-container>
                             <label>Journal</label>
-                            <input type="text" ng-model="search.journal">
+                            <input type="text" ng-model="searchTerms.journal">
                         </md-input-container>
                         <md-input-container>
                             <label>Autor</label>
-                            <input type="text" ng-model="search.authors">
+                            <input type="text" ng-model="searchTerms.authors">
                         </md-input-container>
                         <md-input-container>
                             <label>Institution</label>
-                            <input type="text" ng-model="search.institutions">
+                            <input type="text" ng-model="searchTerms.institutions">
                         </md-input-container>
                         <md-input-container>
                             <label>Text</label>
-                            <input type="text" ng-model="search.abstract">
+                            <input type="text" ng-model="searchTerms.abstract">
                         </md-input-container>
                         <md-input-container>
                             <label>PMID</label>
-                            <input type="text" ng-model="search.PMID">
+                            <input type="text" ng-model="searchTerms.PMID">
                         </md-input-container>
                     </div>
                 </form>
@@ -48,11 +48,15 @@
                 <md-list role="list">
                     <md-list-item role="listitem" ng-repeat="result in results.results track by $index">
                         <md-item-content class="md-primary-container">
-                            <h3 class="title" layout="row"><a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a></h3>
-                            <h4 class="journal" title="Journal">{{result.journal}}</h4>
-                            <p class="institutions" title="Institutionen">{{result.institutions}}</p>
-                            <p class="authors" title="Autoren">{{result.authors.join(', ')}}</p>
-                            <p class="abstract" title="Abstract">{{result.abstract | limitTo: (result.showAll ? result.abstract.length : 120) }}<span ng-hide="result.showAll">...</span> <a href="#" class="toggle-show-more-btn md-primary md-button md-ink-ripple" ng-click="toggleShowMore($event, result)"><span ng-hide="result.showAll">mehr &gt;</span><span ng-show="result.showAll">&lt; weniger</span></a></p>
+                            <h3 class="title" layout="row" layout-align="start center">
+                                <md-tooltip md-direction="left">Titel</md-tooltip>
+                                <div class="ranking"><md-tooltip md-direction="left">Ranking</md-tooltip>{{result.ranking | number: 4}}</div>
+                                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a>
+                            </h3>
+                            <h4 class="journal"><md-tooltip md-direction="left">Journal</md-tooltip>{{result.journal}}</h4>
+                            <p class="institutions"><md-tooltip md-direction="left">Institutionen</md-tooltip>{{result.institutions}}</p>
+                            <p class="authors"><md-tooltip md-direction="left">Autoren</md-tooltip>{{result.authors.join(', ')}}</p>
+                            <p class="abstract" ng-show="result.abstract !== ''"><md-tooltip md-direction="left">Abstract</md-tooltip>{{result.abstract | limitTo: (result.showAll ? result.abstract.length : 120) }}<span ng-hide="result.showAll">...</span> <a href="#" class="toggle-show-more-btn md-primary md-button md-ink-ripple" ng-click="toggleShowMore($event, result)"><span ng-hide="result.showAll">mehr &gt;</span><span ng-show="result.showAll">&lt; weniger</span></a></p>
                         </md-item-content>
                         <md-divider ng-if="!$last"></md-divider>
                     </md-list-item>

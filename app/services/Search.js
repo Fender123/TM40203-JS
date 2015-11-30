@@ -163,8 +163,8 @@ angular.module('App.service', ['ngResource'])
                     for(var s in this.search){
                         if(this.search.hasOwnProperty(s)){
                             var fieldName = s.toLowerCase();
-                            //check if field is valid
-                            if(fields.indexOf(fieldName) !== false){
+                            //check if field is valid and contains anything
+                            if(fields.indexOf(fieldName) !== false && this.search[s] !== ''){
                                 query.push(fieldName + ':' + this.search[s]);
                             }
                         }
