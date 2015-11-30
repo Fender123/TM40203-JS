@@ -49,9 +49,8 @@
                     <md-list-item role="listitem" ng-repeat="result in results.results track by $index">
                         <md-item-content class="md-primary-container">
                             <h3 class="title" layout="row" layout-align="start center">
-                                <md-tooltip md-direction="left">Titel</md-tooltip>
                                 <div class="ranking"><md-tooltip md-direction="left">Ranking</md-tooltip>{{result.ranking | number: 4}}</div>
-                                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a>
+                                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><md-tooltip md-direction="left">Titel</md-tooltip><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a>
                             </h3>
                             <h4 class="journal"><md-tooltip md-direction="left">Journal</md-tooltip>{{result.journal}}</h4>
                             <p class="institutions"><md-tooltip md-direction="left">Institutionen</md-tooltip>{{result.institutions}}</p>
