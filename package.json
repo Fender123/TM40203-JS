@@ -1,0 +1,25 @@
+{
+  "name": "tm40203-js",
+  "version": "1.0.0",
+  "description": "Webfrontend made with Bootstrap and Angular JS for the KM backend developed for TM40203",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-stylus": "^0.22.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fender123/TM40203-JS.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fender123/TM40203-JS/issues"
+  },
+  "homepage": "https://fender123.github.io/TM40203-JS/"
+}
