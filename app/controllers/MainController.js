@@ -35,7 +35,15 @@ angular.module('App.main', ['ngRoute'])
 
     .controller('MainCtrl', ['$scope', '$rootScope', 'SearchManager', 'Query', '$mdDialog', '$mdMedia', function($scope, $rootScope, SearchManager, Query, $mdDialog, $mdMedia) {
         $scope.$mdMedia = $mdMedia;
-        $scope.searchTerm = '';
+        $scope.search = {
+            title: '',
+            journal: '',
+            authors: '',
+            institutions: '',
+            abstract: '',
+            PMID: ''
+        };
+        $scope.advancedMode = false;
         $scope.results = [];
         $scope.pages = [0, 0];
         $scope.currentPage = 0;
@@ -46,7 +54,13 @@ angular.module('App.main', ['ngRoute'])
             $event.preventDefault();
 
             Query.reset();
-            Query.term = $scope.searchTerm;
+            if($scope.advancedMode) {
+                Query.mode = Query.MODE_ADVANCED;
+                Query.search = $scope.search;
+            }else{
+                Query.mode = Query.MODE_SIMPLE;
+                Query.term = $scope.search.title;
+            }
 
             updateSearch();
         };
@@ -70,6 +84,11 @@ angular.module('App.main', ['ngRoute'])
 
             Query.gotoPage(Query.currentPage() - 1);
             updateSearch();
+        };
+
+        $scope.toggleShowMore = function($event, result){
+            $event.preventDefault();
+            result.showAll = !result.showAll;
         };
 
         var resetSearch = function(){
@@ -108,6 +127,22 @@ angular.module('App.main', ['ngRoute'])
 
             var start = (new Date()).getTime();
             $scope.results = SearchManager.search($rootScope.global.datasourceKey, Query.getQuery()).then(function(results){
+                //check if an error happend
+                if(results === false){
+                    var alert = $mdDialog.alert()
+                        .title('Fehler beim Abrufen der Ergebnisse')
+                        .content('Für deine Eingaben konnten leider keine Ergebnisse geladen werden. Bitte probiere es mit anderen Werten')
+                        .ok('Schließen');
+                    $mdDialog.show(alert)
+                        .finally(function(){
+                            alert = undefined;
+                        });
+
+                    $scope.loading = false;
+
+                    return;
+                }
+
                 $scope.results = results;
 
                 var end = (new Date()).getTime();

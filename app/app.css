@@ -10,3 +10,6 @@ md-card.results .title a {
   color: inherit;
   text-decoration: none;
 }
+md-card.results .toggle-show-more-btn {
+  vertical-align: middle;
+}
