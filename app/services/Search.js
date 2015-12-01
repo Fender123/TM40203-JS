@@ -149,6 +149,7 @@ angular.module('App.service', ['ngResource'])
             getQueryString: function(){
                 var query = [];
                 var fields = ['journal', 'authors', 'title', 'institutions', 'abstract', 'pmid'];
+                var conjunction = ' '; //space = OR
                 if(this.mode === this.MODE_SIMPLE) {
                     if(typeof this.term === 'undefined'){
                         return '';
@@ -160,6 +161,7 @@ angular.module('App.service', ['ngResource'])
                         }
                     }
                 }else if(this.mode === this.MODE_ADVANCED){
+                    conjunction = ' AND ';  //use AND in advanced mode
                     for(var s in this.search){
                         if(this.search.hasOwnProperty(s)){
                             var fieldName = s.toLowerCase();
@@ -170,7 +172,7 @@ angular.module('App.service', ['ngResource'])
                         }
                     }
                 }
-                query = query.join(' ');
+                query = query.join(conjunction);
                 return query;
             },
 

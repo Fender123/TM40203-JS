@@ -49,13 +49,13 @@
                     <md-list-item role="listitem" ng-repeat="result in results.results track by $index">
                         <md-item-content class="md-primary-container">
                             <h3 class="title" layout="row" layout-align="start center">
-                                <div class="ranking"><md-tooltip md-direction="left">Ranking</md-tooltip>{{result.ranking | number: 4}}</div>
-                                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><md-tooltip md-direction="left">Titel</md-tooltip><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a>
+                                <div class="ranking"><md-tooltip md-direction="top">Ranking</md-tooltip>{{result.ranking | number: 4}}</div>
+                                <a href="http://www.ncbi.nlm.nih.gov/pubmed/?term={{result.pmid}}" target="_blank" class="title-link"><md-tooltip md-direction="top">Titel</md-tooltip><span title="PMID">{{result.pmid}}</span>: {{result.title}} <ng-md-icon icon="open_in_new"></ng-md-icon></a>
                             </h3>
                             <h4 class="journal"><md-tooltip md-direction="left">Journal</md-tooltip>{{result.journal}}</h4>
                             <p class="institutions"><md-tooltip md-direction="left">Institutionen</md-tooltip>{{result.institutions}}</p>
                             <p class="authors"><md-tooltip md-direction="left">Autoren</md-tooltip>{{result.authors.join(', ')}}</p>
-                            <p class="abstract" ng-show="result.abstract !== ''"><md-tooltip md-direction="left">Abstract</md-tooltip>{{result.abstract | limitTo: (result.showAll ? result.abstract.length : 120) }}<span ng-hide="result.showAll">...</span> <a href="#" class="toggle-show-more-btn md-primary md-button md-ink-ripple" ng-click="toggleShowMore($event, result)"><span ng-hide="result.showAll">mehr &gt;</span><span ng-show="result.showAll">&lt; weniger</span></a></p>
+                            <p class="abstract" ng-show="result.abstract !== ''"><md-tooltip md-direction="top">Abstract</md-tooltip>{{result.abstract | limitTo: (result.showAll ? result.abstract.length : 120) }}<span ng-hide="result.showAll">...</span> <a href="#" class="toggle-show-more-btn md-primary md-button md-ink-ripple" ng-click="toggleShowMore($event, result)"><span ng-hide="result.showAll">mehr &gt;</span><span ng-show="result.showAll">&lt; weniger</span></a></p>
                         </md-item-content>
                         <md-divider ng-if="!$last"></md-divider>
                     </md-list-item>
